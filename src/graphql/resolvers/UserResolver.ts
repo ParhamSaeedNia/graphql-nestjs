@@ -1,8 +1,18 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Int,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { User } from '../models/User';
 import { mockUsers } from 'src/__mocks__/mockUser';
+import { UserSetting } from '../models/UserSetting';
+import { mockUserSettings } from 'src/__mocks__/mockUserSettings';
 
-@Resolver()
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+@Resolver((of) => User)
 export class UserResolver {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Query((returns) => User, { nullable: true })
@@ -13,5 +23,11 @@ export class UserResolver {
   @Query(() => [User])
   getUsers() {
     return mockUsers;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @ResolveField((returns) => UserSetting, { name: 'settings', nullable: true })
+  getUserSettings(@Parent() user: User) {
+    return mockUserSettings.find((setting) => setting.userId === user.id);
   }
 }
