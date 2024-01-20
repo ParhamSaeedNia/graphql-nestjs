@@ -11,6 +11,7 @@ import { User } from '../models/User';
 import { mockUsers } from 'src/__mocks__/mockUser';
 import { UserSetting } from '../models/UserSetting';
 import { mockUserSettings } from 'src/__mocks__/mockUserSettings';
+import { CreateUserInput } from '../utils/CreateUserInput';
 
 export let incrementalId = 3;
 
@@ -36,10 +37,8 @@ export class UserResolver {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @Mutation((returns) => User)
-  createUser(
-    @Args('username') username: string,
-    @Args('displayName', { nullable: true }) displayName: string,
-  ) {
+  createUser(@Args('createUserData') createUserData: CreateUserInput) {
+    const { username, displayName } = createUserData;
     const newUser = { username, displayName, id: ++incrementalId };
     mockUsers.push(newUser);
     return newUser;
